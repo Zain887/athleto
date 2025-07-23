@@ -14,12 +14,10 @@ export default function Navbar() {
 
   const navItems = [
     { name: 'Home', path: '/' },
-    { name: 'Products', path: '/products' },
+    { name: 'Shop', path: '/products' },
     { name: 'Men', path: '/men' },
     { name: 'Women', path: '/women' },
     { name: 'Kids', path: '/kids' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
   ]
 
   const isActive = (path: string) => pathname === path

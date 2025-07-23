@@ -11,7 +11,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <>
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 py-8">{children}</main>
+      <main className="mx-auto w-full overflow-hidden">{children}</main>
       <Footer />
     </>
   );

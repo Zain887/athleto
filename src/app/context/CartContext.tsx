@@ -1,3 +1,4 @@
+// context/CartContext.tsx
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
@@ -13,6 +14,9 @@ export interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
+  clearCart: () => void;
+  updateQuantity: (name: string, size: string, quantity: number) => void;
+  removeFromCart: (name: string, size: string) => void;
   totalItems: number;
 }
 
@@ -34,10 +38,33 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCart((prev) => [...prev, item]);
   };
 
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
+
+  const updateQuantity = (name: string, size: string, quantity: number) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.name === name && item.size === size
+          ? { ...item, quantity: Math.max(1, quantity) }
+          : item
+      )
+    );
+  };
+
+  const removeFromCart = (name: string, size: string) => {
+    setCart((prev) =>
+      prev.filter((item) => !(item.name === name && item.size === size))
+    );
+  };
+
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, totalItems }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, clearCart, updateQuantity, removeFromCart, totalItems }}
+    >
       {children}
     </CartContext.Provider>
   );

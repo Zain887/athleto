@@ -22,7 +22,7 @@ export default function MenPage() {
         <p className="text-gray-700 mb-6">
           Discover performance-ready tracksuits made for men.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {menProducts.map((product, i) => (
             <ProductCard key={i} product={product} />
           ))}

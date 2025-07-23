@@ -22,7 +22,7 @@ export default function KidsPage() {
         <p className="text-gray-700 mb-6">
           Comfortable and playful tracksuits made for kids.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {kidsProducts.map((product, i) => (
             <ProductCard key={i} product={product} />
           ))}
