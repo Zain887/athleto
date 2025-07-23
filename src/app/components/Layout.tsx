@@ -5,8 +5,6 @@ import Footer from "./Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
-  title?: string;
-  description?: string;
 }
 
 export default function Layout({ children }: LayoutProps) {

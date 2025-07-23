@@ -1,4 +1,4 @@
-// app/layout.tsx (updated to use Navbar globally, Footer added in Layout.tsx)
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -15,23 +15,20 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "ATHLETO - Tracksuit Brand",
-  description:
-    "Premium tracksuits for Men, Women, and Kids – Shop online at ATHLETO.",
+  description: "Premium tracksuits for Men, Women, and Kids – Shop online at ATHLETO.",
   icons: {
-    icon: "/favicon.png",
+    icon: "/favicon.png", // Make sure this file exists in your /public folder
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black`}  cz-shortcut-listen="true">
         {children}
       </body>
     </html>

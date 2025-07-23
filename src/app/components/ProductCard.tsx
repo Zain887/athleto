@@ -1,23 +1,29 @@
-// app/products/page.tsx
-import Layout from "../components/Layout";
-import Head from "next/head";
-import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+// src/components/ProductCard.tsx
 
-export default function ProductsPage() {
+import Image from "next/image";
+import { Product } from "../data/products";
+
+interface ProductCardProps {
+  product: Product;
+}
+
+export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <Layout>
-      <Head>
-        <title>Shop Tracksuits Online - ATHLETO Products</title>
-        <meta name="description" content="Explore ATHLETO's full range of premium men's, women's, and kids' tracksuits. Comfortable, stylish, and made for every move." />
-      </Head>
-      <h1 className="text-3xl font-extrabold text-[#1C1C1C] mb-4">All Products</h1>
-      <p className="text-gray-700 mb-6">Browse our full range of premium tracksuits for every lifestyle.</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product, i) => (
-          <ProductCard key={i} {...product} />
-        ))}
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <Image
+        src={product.image}
+        alt={product.name}
+        width={500}
+        height={300}
+        className="w-full h-64 object-cover"
+      />
+      <div className="p-4">
+        <h3 className="text-lg font-bold text-[#1C1C1C]">{product.name}</h3>
+        <p className="text-[#FFD700] font-semibold">{product.price}</p>
+        <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+        <p className="text-xs text-gray-400">Sizes: {product.size}</p>
+        <p className="text-xs text-gray-400 capitalize">Category: {product.category}</p>
       </div>
-    </Layout>
+    </div>
   );
 }
