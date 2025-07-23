@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge'; // 👈 REQUIRED for Cloudflare Pages
 
 import { useParams, notFound } from 'next/navigation';
 import Image from 'next/image';
