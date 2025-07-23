@@ -6,6 +6,7 @@ export const metadata = {
     "Premium tracksuits designed for Men, Women, and Kids. Discover your perfect fit with ATHLETO’s modern activewear.",
 };
 
+import Link from "next/link";
 import Layout from "./components/Layout";
 import ProductCard from "./components/ProductCard";
 import { products } from "./data/products";
@@ -60,12 +61,12 @@ export default function Home() {
         <p className="text-[#1C1C1C] mb-4">
           Shop our collections today and experience comfort in motion.
         </p>
-        <a
+        <Link
           href="/products"
           className="inline-block bg-[#1C1C1C] text-white px-6 py-3 rounded-md font-semibold hover:bg-gray-800 transition"
         >
           Shop Now
-        </a>
+        </Link>
       </section>
     </Layout>
   );

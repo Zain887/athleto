@@ -2,7 +2,7 @@
 
 import { useParams, notFound } from 'next/navigation';
 import Image from 'next/image';
-import { products } from '../../data/products';
+import { products, Product } from '../../data/products';
 import Layout from '../../components/Layout';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext'; // 👈 Import Cart Context
@@ -12,9 +12,10 @@ function slugify(name: string) {
 }
 
 export default function ProductDetail() {
-  const { slug } = useParams();
-  const [product, setProduct] = useState<any>(null);
-  const { addToCart } = useCart(); // 👈 use cart context
+  const params = useParams();
+  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
+  const [product, setProduct] = useState<Product | null>(null);
+  const { addToCart } = useCart(); // ✅ use cart context
 
   useEffect(() => {
     const found = products.find((p) => slugify(p.name) === slug);
@@ -32,7 +33,6 @@ export default function ProductDetail() {
       image: product.image,
       quantity: 1,
     });
-
   };
 
   if (!product) return null;

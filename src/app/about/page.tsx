@@ -1,4 +1,4 @@
-// app/about/page.tsx
+'use client';
 
 export const metadata = {
   title: "About ATHLETO - Our Story & Vision",
@@ -20,11 +20,10 @@ export default function AboutPage() {
       <section className="bg-gray-100 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-[#1C1C1C] mb-2">Our Vision</h2>
         <p className="text-gray-700">
-          Our vision is to redefine activewear by merging performance-driven design with everyday style. Whether you're training, traveling, or relaxing, ATHLETO is made for movement.
+          Our vision is to redefine activewear by merging performance-driven design with everyday style.
+          Whether you&rsquo;re training, traveling, or relaxing, ATHLETO is made for movement.
         </p>
       </section>
-
-      {/* Optional: Add images, founder message, or team bios */}
     </Layout>
   );
 }
