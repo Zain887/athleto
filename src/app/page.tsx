@@ -1,4 +1,5 @@
-// app/page.tsx (Home page)
+// src/app/page.tsx
+
 export const metadata = {
   title: "Home - ATHLETO",
   description:
@@ -10,6 +11,8 @@ import ProductCard from "./components/ProductCard";
 import { products } from "./data/products";
 
 export default function Home() {
+  const featured = products.slice(0, 3); // Show top 3 products only
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -29,8 +32,8 @@ export default function Home() {
           Featured Products
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product, index) => (
-            <ProductCard key={index} {...product} />
+          {featured.map((product, index) => (
+            <ProductCard key={index} product={product} />
           ))}
         </div>
       </section>

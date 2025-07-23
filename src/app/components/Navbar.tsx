@@ -5,13 +5,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { ShoppingCart } from 'lucide-react'
+import { useCart } from "../context/CartContext";
+
 
 export default function Navbar() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
-
-  // Replace with dynamic value from cart context or props later
-  const cartItemCount = 3
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -25,6 +24,7 @@ export default function Navbar() {
 
   const isActive = (path: string) => pathname === path
 
+  const { totalItems } = useCart();
   return (
     <nav className="bg-white border-b shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,9 +71,9 @@ export default function Navbar() {
             {/* Cart icon */}
             <Link href="/cart" className="relative text-[#1C1C1C] hover:text-[#FFD700]">
               <ShoppingCart size={22} />
-              {cartItemCount > 0 && (
+              {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#FFD700] text-xs font-bold text-[#1C1C1C] px-1.5 py-0.5 rounded-full">
-                  {cartItemCount}
+                  {totalItems}
                 </span>
               )}
             </Link>
@@ -137,7 +137,7 @@ export default function Navbar() {
             className="flex items-center gap-2 font-bold text-[#1C1C1C] hover:text-[#FFD700]"
           >
             <ShoppingCart size={20} />
-            Cart ({cartItemCount})
+            Cart ({totalItems})
           </Link>
         </div>
       )}
