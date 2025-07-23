@@ -1,11 +1,5 @@
 'use client';
 
-export const metadata = {
-  title: "About ATHLETO - Our Story & Vision",
-  description:
-    "Learn about ATHLETO’s mission to create premium tracksuits that blend fashion, comfort, and performance.",
-};
-
 import Layout from "../components/Layout";
 
 export default function AboutPage() {
