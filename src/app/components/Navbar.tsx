@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation'
 import { ShoppingCart } from 'lucide-react'
 import { useCart } from "../context/CartContext";
 
-
 export default function Navbar() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -23,6 +22,7 @@ export default function Navbar() {
   const isActive = (path: string) => pathname === path
 
   const { totalItems } = useCart();
+
   return (
     <nav className="bg-white border-b shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,7 +30,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/images/athleto.svg"
+              src="/images/logoblackalone.png"
               alt="Athleto Logo"
               width={36}
               height={36}
@@ -77,8 +77,19 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile Hamburger */}
-          <div className="md:hidden">
+          {/* Mobile Right Side (Hamburger + Cart) */}
+          <div className="md:hidden flex items-center gap-4">
+            {/* Cart icon for mobile */}
+            <Link href="/cart" className="relative text-[#1C1C1C] hover:text-[#FFD700]">
+              <ShoppingCart size={22} />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#FFD700] text-xs font-bold text-[#1C1C1C] px-1.5 py-0.5 rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
+
+            {/* Hamburger menu */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="text-[#1C1C1C] focus:outline-none"
@@ -127,16 +138,6 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
-
-          {/* Cart */}
-          <Link
-            href="/cart"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-2 font-bold text-[#1C1C1C] hover:text-[#FFD700]"
-          >
-            <ShoppingCart size={20} />
-            Cart ({totalItems})
-          </Link>
         </div>
       )}
     </nav>

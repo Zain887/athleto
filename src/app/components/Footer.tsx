@@ -23,7 +23,7 @@ export default function Footer() {
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/images/athleto.svg"
+            src="/images/logowhitealone.png"
             alt="Athleto Logo"
             width={32}
             height={32}
@@ -59,7 +59,7 @@ export default function Footer() {
             <FaInstagram size={20} strokeWidth={1.8} />
          </Link>
           <Link
-            href="https://wa.me/923001234567"
+            href="https://wa.me/923263952109"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="WhatsApp"
