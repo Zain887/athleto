@@ -4,15 +4,26 @@ import { useEffect, useState } from 'react';
 import { db, auth } from '../lib/firebase';
 import {
   collection,
-  getDocs,
   query,
   orderBy,
   updateDoc,
   deleteDoc,
   doc,
-  onSnapshot
+  onSnapshot,
+  Timestamp
 } from 'firebase/firestore';
-import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  User
+} from 'firebase/auth';
+
+interface CartItem {
+  name: string;
+  quantity: number;
+  price: string;
+}
 
 interface Order {
   id: string;
@@ -23,15 +34,15 @@ interface Order {
   payment?: string;
   total: number;
   status?: string;
-  cart: { name: string; quantity: number; price: string }[];
-  createdAt?: any;
+  cart: CartItem[];
+  createdAt?: Timestamp;
 }
 
 export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [filter, setFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -58,7 +69,7 @@ export default function AdminPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setError('');
-    } catch (err: any) {
+    } catch {
       setError('Invalid credentials');
     }
   };
@@ -79,8 +90,8 @@ export default function AdminPage() {
   };
 
   const deleteOrder = async (id: string) => {
-    const confirm = window.confirm('Are you sure you want to delete this order?');
-    if (!confirm) return;
+    const confirmDelete = window.confirm('Are you sure you want to delete this order?');
+    if (!confirmDelete) return;
     try {
       await deleteDoc(doc(db, 'orders', id));
     } catch (error) {
@@ -209,7 +220,9 @@ export default function AdminPage() {
                     <button
                       onClick={() => toggleStatus(order.id, order.status)}
                       className={`px-2 py-1 text-xs rounded font-semibold ${
-                        order.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-800'
+                        order.status === 'delivered'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-yellow-100 text-yellow-800'
                       }`}
                     >
                       {order.status === 'delivered' ? 'Delivered' : 'Pending'}
