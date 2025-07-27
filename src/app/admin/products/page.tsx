@@ -40,14 +40,6 @@ export default function ProductAdmin() {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
     const [search, setSearch] = useState('');
-    const router = useRouter();
-
-    useEffect(() => {
-        const unsub = onAuthStateChanged(auth, (user) => {
-            if (!user) router.push('/admin/login');
-        });
-        return () => unsub();
-    }, [router]);
 
     useEffect(() => {
         const unsub = onSnapshot(collection(db, 'products'), (snap) => {

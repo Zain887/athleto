@@ -1,5 +1,5 @@
-// File: /admin/login.tsx
-"use client";
+// app/admin/login/page.tsx
+'use client';
 
 import { useState } from 'react';
 import { auth } from '../../lib/firebase';
