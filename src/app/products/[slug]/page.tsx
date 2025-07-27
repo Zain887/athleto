@@ -47,7 +47,7 @@ export default function ProductDetail() {
     if (!product) return;
     addToCart({
       name: product.name,
-      price: product.price,
+      price: product.price.toString(),
       size: product.size.split(',')[0].trim(),
       image: product.image,
       quantity: 1,
