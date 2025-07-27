@@ -23,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     addToCart({
       name: product.name,
-      price: product.price,
+      price: product.price.toString(),
       size: product.size.split(",")[0].trim(),
       image: product.image,
       quantity: 1,
