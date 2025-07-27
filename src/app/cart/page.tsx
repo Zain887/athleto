@@ -1,4 +1,3 @@
-// app/cart/page.tsx
 'use client';
 
 import Layout from '../components/Layout';
@@ -11,7 +10,10 @@ export default function CartPage() {
   const { cart, updateQuantity, removeFromCart } = useCart();
 
   const total = cart.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace('$', ''));
+    const price =
+      typeof item.price === 'number'
+        ? item.price
+        : parseFloat(item.price?.toString() || '0');
     return sum + price * item.quantity;
   }, 0);
 
@@ -62,7 +64,9 @@ export default function CartPage() {
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  <p className="font-semibold text-[#1C1C1C]">{item.price}</p>
+                  <p className="font-bold text-[#1C1C1C]">
+                    PKR{typeof item.price === 'number' ? item.price.toFixed(2) : parseFloat(item.price).toFixed(2)}
+                  </p>
                   <button
                     onClick={() => removeFromCart(item.name, item.size)}
                     className="text-red-600 hover:text-red-800"
@@ -77,7 +81,7 @@ export default function CartPage() {
             <div className="flex justify-between items-center mt-6 border-t pt-4">
               <span className="text-lg font-bold text-[#1C1C1C]">Total</span>
               <span className="text-lg font-bold text-[#1C1C1C]">
-                ${total.toFixed(2)}
+                PKR{total.toFixed(2)}
               </span>
             </div>
 

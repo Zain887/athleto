@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
+import { Product } from "../types"; // use this type instead of static data
 
 interface ProductCardProps {
   product: Product;
@@ -38,11 +38,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           alt={product.name}
           width={500}
           height={300}
-          className=" h-80 w-full object-cover object-top"
+          className="h-80 w-full object-cover object-top"
         />
         <div className="p-4">
           <h3 className="text-lg font-bold text-[#1C1C1C]">{product.name}</h3>
-          <p className="text-[#FFD700] font-semibold">{product.price}</p>
+          <p className="text-[#FFD700] font-semibold">
+            {typeof product.price === "number" ? `PKR ${product.price}` : product.price}
+          </p>
           <p className="text-sm text-gray-600 mb-2">{product.description}</p>
           <p className="text-xs text-gray-400">Sizes: {product.size}</p>
           <p className="text-xs text-gray-400 capitalize">

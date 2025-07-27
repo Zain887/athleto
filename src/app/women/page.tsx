@@ -1,17 +1,38 @@
-// src/app/women/page.tsx
+'use client';
 
-export const metadata = {
-  title: "Women’s Tracksuits - ATHLETO",
-  description:
-    "Discover stylish and functional women's tracksuits from ATHLETO. Designed for comfort, crafted for movement.",
-};
 
-import Layout from "../components/Layout";
-import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+
+import { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
+import ProductCard from '../components/ProductCard';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { Product } from '../types';
 
 export default function WomenPage() {
-  const womenProducts = products.filter((p) => p.category === "women");
+  const [womenProducts, setWomenProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'products'));
+        const allProducts = snap.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Product, 'id'>),
+        }));
+
+        const filtered = allProducts.filter(
+          (p) => p.category.toLowerCase() === 'women'
+        );
+
+        setWomenProducts(filtered);
+      } catch (err) {
+        console.error('Failed to fetch women’s products:', err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <Layout>
@@ -24,8 +45,8 @@ export default function WomenPage() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {womenProducts.map((product, i) => (
-            <ProductCard key={i} product={product} />
+          {womenProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>

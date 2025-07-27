@@ -1,61 +1,64 @@
-// data/products.ts
-
-export interface Product {
-  name: string;
-  price: string;
-  size: string;
-  description: string;
-  image: string;
-  category: "men" | "women" | "kids";
-}
+import { Product } from '../types';
 
 export const products: Product[] = [
   {
+    id: '1',
     name: "Men's Elite Tracksuit",
     price: "$79.99",
     size: "M, L, XL",
     description: "Breathable and stylish tracksuit for everyday performance.",
     image: "/images/dummy.png",
     category: "men",
+    stock: 1,
   },
   {
+    id: '2',
     name: "Men's Active Pro Set",
     price: "$89.99",
     size: "L, XL, XXL",
     description: "Sweat-wicking fabric with a modern slim fit.",
     image: "/images/dummy.png",
     category: "men",
+    stock: 1,
   },
   {
+    id: '3',
     name: "Women's Flex Tracksuit",
     price: "$84.99",
     size: "S, M, L",
     description: "Comfortable, stylish and perfect for workouts or casual wear.",
     image: "/images/dummy.png",
     category: "women",
+    stock: 1,
   },
   {
+    id: '4',
     name: "Women's Motion Luxe",
     price: "$94.99",
     size: "M, L",
     description: "Designed for flexibility and elegance on the go.",
     image: "/images/dummy.png",
     category: "women",
+    stock: 1,
   },
   {
+    id: '5',
     name: "Kids' Play Tracksuit",
     price: "$59.99",
     size: "XS, S, M",
     description: "Durable tracksuit designed for energetic and playful kids.",
     image: "/images/dummy.png",
     category: "kids",
+    stock: 1,
   },
   {
+    id: '6',
     name: "Kids' Color Pop Set",
     price: "$64.99",
     size: "S, M, L",
     description: "Bright, fun colors with durable comfort for kids.",
     image: "/images/dummy.png",
     category: "kids",
+    stock: 1,
   },
 ];

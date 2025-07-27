@@ -1,19 +1,32 @@
 // src/app/page.tsx
-'use client';
+import { fetchProducts } from './lib/fetchProducts';
+import Layout from './components/Layout';
+import ProductCard from './components/ProductCard';
+import Image from 'next/image';
+import Link from 'next/link';
 
+export const metadata = {
+  title: 'ATHLETO - Premium Tracksuits for Men, Women & Kids',
+  description:
+    'Discover ATHLETO’s premium tracksuits crafted for comfort, performance, and everyday style.',
+};
 
-import Link from "next/link";
-import Layout from "./components/Layout";
-import ProductCard from "./components/ProductCard";
-import { products } from "./data/products";
-import Image from "next/image";
+export default async function Home() {
+  const allProductsRaw = await fetchProducts();
 
-export default function Home() {
-  const featured = products.slice(0, 8);
+  const allProducts = allProductsRaw.map((p) => ({
+    ...p,
+    createdAt:
+      p.createdAt && typeof p.createdAt === 'object' && 'toDate' in p.createdAt
+        ? p.createdAt.toDate().toISOString()
+        : null,
+  }));
+
+  const featured = allProducts.slice(0, 8);
 
   return (
     <Layout>
-      {/* Hero Section with Background Image */}
+      {/* Hero Section */}
       <section className="relative h-[80vh] bg-black text-white flex items-center justify-center">
         <Image
           src="/images/hero.jpg"
@@ -33,13 +46,13 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-6 px-4 md:px-10">
+      <section className="py-12 px-4 md:px-10">
         <h2 className="text-3xl font-bold text-[#FFD700] mb-6 text-center">
           Featured Products
         </h2>
-        <div className="grid grid-cols-1 justify-center sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {featured.map((product) => (
-            <ProductCard key={product.name} product={product} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>
@@ -61,24 +74,16 @@ export default function Home() {
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-[#FFD700] mb-8">What Our Customers Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            <div className="bg-[#1c1c1c] p-6 rounded-lg shadow">
-              <p className="italic">
-                &ldquo;The best tracksuit I&apos;ve ever owned. Stylish and super comfy!&rdquo;
-              </p>
-              <p className="mt-4 font-semibold">– Ayesha R.</p>
-            </div>
-            <div className="bg-[#1c1c1c] p-6 rounded-lg shadow">
-              <p className="italic">
-                &ldquo;Perfect fit and top-notch quality. Will definitely buy again.&rdquo;
-              </p>
-              <p className="mt-4 font-semibold">– Ahmed M.</p>
-            </div>
-            <div className="bg-[#1c1c1c] p-6 rounded-lg shadow">
-              <p className="italic">
-                &ldquo;My kids love them! Great for school and sports.&rdquo;
-              </p>
-              <p className="mt-4 font-semibold">– Sana K.</p>
-            </div>
+            {[
+              { quote: "The best tracksuit I've ever owned. Stylish and super comfy!", name: 'Ayesha R.' },
+              { quote: 'Perfect fit and top-notch quality. Will definitely buy again.', name: 'Ahmed M.' },
+              { quote: 'My kids love them! Great for school and sports.', name: 'Sana K.' },
+            ].map((t, i) => (
+              <div key={i} className="bg-[#1c1c1c] text-white p-6 rounded-lg shadow">
+                <p className="italic">&ldquo;{t.quote}&rdquo;</p>
+                <p className="mt-4 font-semibold">– {t.name}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

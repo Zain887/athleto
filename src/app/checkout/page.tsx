@@ -34,28 +34,42 @@ export default function CheckoutPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (cart.length === 0) {
+            alert('❌ Your cart is empty!');
+            return;
+        }
+
         const total = cart.reduce((sum, item) => {
-            const price = parseFloat(item.price.replace('$', ''));
+            const price = typeof item.price === 'string'
+                ? parseFloat(item.price.replace('PKR', ''))
+                : item.price;
+
             return sum + price * item.quantity;
         }, 0);
 
+
+        // Only include fields Firestore rules expect (and useful extras)
         const orderData = {
-            ...form,
-            cart,
+            name: form.name.trim(),
+            phone: form.phone.trim(),
             total,
+            cart,
+            address: form.address.trim(),
+            city: form.city.trim(),
+            payment: form.payment,
             createdAt: serverTimestamp(),
         };
 
         try {
             await addDoc(collection(db, 'orders'), orderData);
-            // alert('✅ Order placed successfully!');
             clearCart();
             window.location.href = '/thank-you';
         } catch (err) {
             console.error('Error saving order:', err);
-            alert('❌ Failed to place order. Try again.');
+            alert('❌ Failed to place order. Please try again.');
         }
     };
+
 
     return (
         <Layout>

@@ -1,17 +1,34 @@
-// src/app/men/page.tsx
+'use client';
 
-export const metadata = {
-  title: "Men’s Tracksuits - ATHLETO",
-  description:
-    "Shop the latest premium men's tracksuits at ATHLETO. Athletic wear designed for performance, comfort, and style.",
-};
 
-import Layout from "../components/Layout";
-import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+import { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
+import ProductCard from '../components/ProductCard';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { Product } from '../types';
 
 export default function MenPage() {
-  const menProducts = products.filter((p) => p.category === "men");
+  const [menProducts, setMenProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'products'));
+        const allProducts = snap.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Product, 'id'>),
+        }));
+
+        const menOnly = allProducts.filter((p) => p.category.toLowerCase() === 'men');
+        setMenProducts(menOnly);
+      } catch (err) {
+        console.error('Failed to fetch men’s products:', err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <Layout>
@@ -23,8 +40,8 @@ export default function MenPage() {
           Discover performance-ready tracksuits made for men.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {menProducts.map((product, i) => (
-            <ProductCard key={i} product={product} />
+          {menProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>

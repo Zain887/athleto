@@ -1,7 +1,15 @@
-'use client';
+// Plan:
+// 1. Split this page into modular routes:
+//    - /admin/login
+//    - /admin/dashboard (order management)
+//    - /admin/products (product upload/edit)
+// 2. Use shared auth state across all routes (via Context or shared layout)
+// 3. This file becomes /admin/dashboard.tsx
+
+"use client";
 
 import { useEffect, useState } from 'react';
-import { db, auth } from '../lib/firebase';
+import { db, auth } from '../../lib/firebase';
 import {
   collection,
   query,
@@ -12,12 +20,8 @@ import {
   onSnapshot,
   Timestamp
 } from 'firebase/firestore';
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  User
-} from 'firebase/auth';
+import { onAuthStateChanged, signOut, User } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 interface CartItem {
   name: string;
@@ -38,21 +42,23 @@ interface Order {
   createdAt?: Timestamp;
 }
 
-export default function AdminPage() {
+export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [filter, setFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [user, setUser] = useState<User | null>(null);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      if (!currentUser) {
+        router.push('/admin/login');
+      } else {
+        setUser(currentUser);
+      }
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (!user) return;
@@ -64,18 +70,9 @@ export default function AdminPage() {
     return () => unsubscribe();
   }, [user]);
 
-  const signIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setError('');
-    } catch {
-      setError('Invalid credentials');
-    }
-  };
-
   const logout = () => {
     signOut(auth);
+    router.push('/admin/login');
   };
 
   const toggleStatus = async (id: string, currentStatus: string = 'pending') => {
@@ -99,42 +96,6 @@ export default function AdminPage() {
       alert('Failed to delete order. Check permissions.');
     }
   };
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#fdf7e3] px-4">
-        <form
-          onSubmit={signIn}
-          className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-sm text-[#1C1C1C]"
-        >
-          <h2 className="text-2xl font-bold mb-4 text-center">🔐 Admin Login</h2>
-          {error && <p className="text-red-600 mb-4 text-sm text-center">{error}</p>}
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            className="w-full border border-[#FFD700] px-4 py-2 mb-3 rounded"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-            className="w-full border border-[#FFD700] px-4 py-2 mb-5 rounded"
-          />
-          <button
-            type="submit"
-            className="w-full bg-[#FFD700] text-[#1C1C1C] font-bold py-2 rounded hover:bg-yellow-400"
-          >
-            Login
-          </button>
-        </form>
-      </div>
-    );
-  }
 
   const filteredOrders = orders.filter(order => {
     const paymentMatch = filter ? order.payment?.toLowerCase() === filter.toLowerCase() : true;

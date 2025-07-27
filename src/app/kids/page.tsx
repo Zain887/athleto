@@ -1,17 +1,38 @@
-// src/app/kids/page.tsx
+'use client';
 
-export const metadata = {
-  title: "Kids’ Tracksuits - ATHLETO",
-  description:
-    "Comfortable, durable, and stylish tracksuits for kids. Discover ATHLETO's kidswear collection today.",
-};
 
-import Layout from "../components/Layout";
-import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+
+import { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
+import ProductCard from '../components/ProductCard';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { Product } from '../types';
 
 export default function KidsPage() {
-  const kidsProducts = products.filter((p) => p.category === "kids");
+  const [kidsProducts, setKidsProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'products'));
+        const allProducts = snap.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Product, 'id'>),
+        }));
+
+        const kidsOnly = allProducts.filter(
+          (p) => p.category.toLowerCase() === 'kids'
+        );
+
+        setKidsProducts(kidsOnly);
+      } catch (err) {
+        console.error('Failed to fetch kids’ products:', err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <Layout>
@@ -23,8 +44,8 @@ export default function KidsPage() {
           Comfortable and playful tracksuits made for kids.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {kidsProducts.map((product, i) => (
-            <ProductCard key={i} product={product} />
+          {kidsProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>

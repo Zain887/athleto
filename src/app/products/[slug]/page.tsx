@@ -3,10 +3,12 @@ export const runtime = 'edge';
 
 import { useParams, notFound } from 'next/navigation';
 import Image from 'next/image';
-import { products, Product } from '../../data/products';
 import Layout from '../../components/Layout';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
+import { db } from '../../lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import { Product } from '../../types';
 
 function slugify(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -15,14 +17,30 @@ function slugify(name: string) {
 export default function ProductDetail() {
   const params = useParams();
   const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
+
   const [product, setProduct] = useState<Product | null>(null);
-  const { addToCart } = useCart();
   const [showModal, setShowModal] = useState(false);
+  const { addToCart } = useCart();
 
   useEffect(() => {
-    const found = products.find((p) => slugify(p.name) === slug);
-    if (!found) return notFound();
-    setProduct(found);
+    const fetchProduct = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'products'));
+        const allProducts = snap.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Product, 'id'>),
+        }));
+
+        const found = allProducts.find((p) => slugify(p.name) === slug);
+        if (!found) return notFound();
+        setProduct(found);
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        notFound();
+      }
+    };
+
+    if (slug) fetchProduct();
   }, [slug]);
 
   const handleAddToCart = () => {
