@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import ProductCard from './components/ProductCard';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Timestamp } from 'firebase/firestore';
 
 export const metadata = {
   title: 'ATHLETO - Premium Tracksuits for Men, Women & Kids',
@@ -18,8 +19,9 @@ export default async function Home() {
     ...p,
     createdAt:
       p.createdAt && typeof p.createdAt === 'object' && 'toDate' in p.createdAt
-        ? p.createdAt.toDate().toISOString()
+        ? (p.createdAt as Timestamp).toDate().toISOString()
         : null,
+
   }));
 
   const featured = allProducts.slice(0, 8);
