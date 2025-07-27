@@ -65,7 +65,10 @@ export default function CartPage() {
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <p className="font-bold text-[#1C1C1C]">
-                    PKR{typeof item.price === 'number' ? item.price.toFixed(2) : parseFloat(item.price).toFixed(2)}
+                    PKR{typeof item.price === 'number'
+                      ? (item.price as number).toFixed(2)
+                      : parseFloat(item.price as string).toFixed(2)}
+
                   </p>
                   <button
                     onClick={() => removeFromCart(item.name, item.size)}
